@@ -5,7 +5,6 @@ Created on Sat Jul 28 16:00:08 2018
 
 @author: user
 """
-
 import numpy as np
 
 import gym
@@ -47,13 +46,13 @@ def main():
     
     random_process = OrnsteinUhlenbeckProcess(size=action_shape, theta=.15, mu=0., sigma=.1)
     agent = DDPGAgent(nb_actions=action_shape, actor=actor, critic=critic, critic_action_input=action_input,
-                      memory=memory, nb_steps_warmup_critic=1000, nb_steps_warmup_actor=1000,
+                      memory=memory, nb_steps_warmup_critic=100, nb_steps_warmup_actor=100,
                       random_process=random_process, gamma=.99, target_model_update=1e-3,
                       processor=BipedalProcessor())
     agent.compile([Adam(lr=1e-4), Adam(lr=1e-3)], metrics=['mae'])
     agent.load_weights('ddpg_{}_weights.h5f'.format(ENV_NAME))
     #agent.fit()
-    agent.fit(env, nb_steps=200, action_repetition = 100, visualize=True, verbose=1)
+    agent.fit(env, nb_steps=3000000, visualize=False, verbose=2)
     agent.save_weights('ddpg_{}_weights.h5f'.format(ENV_NAME), overwrite=True)
     #agent.test(env, nb_episodes=5, visualize=True, nb_max_episode_steps=200)
     
